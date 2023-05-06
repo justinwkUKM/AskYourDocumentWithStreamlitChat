@@ -40,11 +40,18 @@ def main():
     
     # extract the text
     if pdf is not None:
+      print(pdf.name)
+      print(pdf)
 
-      pdf_reader = PdfReader(pdf)
       text = ""
-      for page in pdf_reader.pages:
-        text += page.extract_text()
+
+      try:
+        pdf_reader = PdfReader(pdf)
+        for page in pdf_reader.pages:
+          text += page.extract_text()
+        print("text", text[0:10])
+      except:
+        print('An exception occurred')
         
       # split into chunks
       text_splitter = CharacterTextSplitter(
@@ -53,28 +60,31 @@ def main():
         chunk_overlap=500,
         length_function=len
       )
-      chunks = text_splitter.split_text(text)
-      
-      # create embeddings
-      embeddings = OpenAIEmbeddings()
-      knowledge_base = FAISS.from_texts(chunks, embeddings)
+
+      if text:
+        chunks = text_splitter.split_text(text)
+        # create embeddings
+        embeddings = OpenAIEmbeddings()
+        knowledge_base = FAISS.from_texts(chunks, embeddings)
       
       # show user input
-      user_question = st.text_input("Ask a question about your PDF:")
-      if user_question:
-        docs = knowledge_base.similarity_search(user_question)
-        
-        llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0.1)
-        chain = load_qa_chain(llm, chain_type="stuff")
-        with get_openai_callback() as cb:
-          response = chain.run(input_documents=docs, question=user_question)
-          print(cb)
-        
-        st.session_state.history.append({"message": user_question, "is_user": True})
-        st.session_state.history.append({"message": response, "is_user": False})
+        user_question = st.text_input("Ask a question about your PDF:")
+        if user_question:
+          docs = knowledge_base.similarity_search(user_question)
+          
+          llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0.1)
+          chain = load_qa_chain(llm, chain_type="stuff")
+          with get_openai_callback() as cb:
+            response = chain.run(input_documents=docs, question=user_question)
+            print(cb)
+          
+          st.session_state.history.append({"message": user_question, "is_user": True})
+          st.session_state.history.append({"message": response, "is_user": False})
 
-        for i, chat in enumerate(st.session_state.history):
-          st_message(**chat, key=str(i))
+          for i, chat in enumerate(st.session_state.history):
+            st_message(**chat, key=str(i))
+      else:
+        st.error(f"Sorry the file {pdf.name} cannot be processed. Try another document.")
 
 if __name__ == '__main__':
     main()
