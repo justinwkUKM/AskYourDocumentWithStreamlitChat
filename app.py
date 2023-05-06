@@ -19,16 +19,8 @@ def main():
                         page_icon="💬")
     st.header("Ask your Document 💬")
     hide_menu = """
-    <style>
-    
-    footer {
-      
-      visibility: hidden;
-      
-    }
-    footer:after {
-      content:'Made with ❤️ by Waqas. Work in Progress'; 
-      visibility: visible;
+    <style>footer {visibility: hidden;}
+    footer:before {content:'Made with ❤️ by Waqas. Work in Progress'; visibility: visible;
       display: block;
       position: relative;
       #background-color: red;
@@ -57,8 +49,8 @@ def main():
       # split into chunks
       text_splitter = CharacterTextSplitter(
         separator="\n",
-        chunk_size=1000,
-        chunk_overlap=200,
+        chunk_size=2000,
+        chunk_overlap=500,
         length_function=len
       )
       chunks = text_splitter.split_text(text)
