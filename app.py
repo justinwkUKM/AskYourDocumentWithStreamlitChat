@@ -18,13 +18,27 @@ def main():
                         page_title="Ask your Document 💬", 
                         page_icon="💬")
     st.header("Ask your Document 💬")
+    hide_menu = """
+    <style>
     
+    footer {
+      
+      visibility: hidden;
+      
+    }
+    footer:after {
+      content:'Made with ❤️ by Waqas. Work in Progress'; 
+      visibility: visible;
+      display: block;
+      position: relative;
+      #background-color: red;
+      padding: 5px;
+      top: 2px;
+    }
+    </style>
+    """
+    st.markdown(hide_menu, unsafe_allow_html=True) 
 
-    hide_streamlit_style=""" <style>
-            footer {visibility: hidden;}
-            </style>
-            """
-    st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
     if "history" not in st.session_state:
       st.session_state.history = []
