@@ -4,7 +4,8 @@ from PyPDF2 import PdfReader
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
-from langchain.chains.question_answering import load_qa_chain
+# from langchain.chains.question_answering import load_qa_chain
+from langchain.chains import ConversationalRetrievalChain
 from langchain.chat_models import ChatOpenAI
 from langchain.callbacks import get_openai_callback
 from streamlit_chat import message as st_message
@@ -44,12 +45,15 @@ def main():
       print(pdf)
 
       text = ""
+      chat_history = []
+
 
       try:
         pdf_reader = PdfReader(pdf)
         for page in pdf_reader.pages:
           text += page.extract_text()
         print("text", text[0:10])
+
       except:
         print('An exception occurred')
         
@@ -73,13 +77,19 @@ def main():
           docs = knowledge_base.similarity_search(user_question)
           
           llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0.1)
-          chain = load_qa_chain(llm, chain_type="stuff")
+          # chain = load_qa_chain(llm, chain_type="stuff")
+          qa = ConversationalRetrievalChain.from_llm(llm, knowledge_base.as_retriever())
           with get_openai_callback() as cb:
-            response = chain.run(input_documents=docs, question=user_question)
+            response = qa({"question": user_question, "chat_history": chat_history})
+            chat_history.append((user_question, response['answer']))
+            
+            print("Response ",response)
+            print("chat_history", chat_history)
             print(cb)
+
           
           st.session_state.history.append({"message": user_question, "is_user": True})
-          st.session_state.history.append({"message": response, "is_user": False})
+          st.session_state.history.append({"message": response['answer'], "is_user": False})
 
           for i, chat in enumerate(st.session_state.history):
             st_message(**chat, key=str(i))
