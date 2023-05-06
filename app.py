@@ -10,11 +10,22 @@ from langchain.callbacks import get_openai_callback
 from streamlit_chat import message as st_message
 
 
-
 def main():
     load_dotenv()
-    st.set_page_config(page_title="Ask your Document 💬")
+    
+    st.set_page_config(layout="centered",  # Can be "centered" or "wide". In the future also "dashboard", etc.
+	                      initial_sidebar_state="auto",  # Can be "auto", "expanded", "collapsed",
+                        page_title="Ask your Document 💬", 
+                        page_icon="💬")
     st.header("Ask your Document 💬")
+    
+
+    hide_streamlit_style=""" <style>
+            footer {visibility: hidden;}
+            </style>
+            """
+    st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
     if "history" not in st.session_state:
       st.session_state.history = []
 
