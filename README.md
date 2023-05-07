@@ -26,9 +26,11 @@ The application is designed with the user in mind, offering a simple and streaml
 
 One of the key features of our application is its ability to understand natural language queries. Simply type in your question as you would to a human being, and our intelligent bot will analyze your query and search through your document to find the most relevant information. With its advanced algorithms and machine learning capabilities, our bot can quickly understand the context of your question and deliver an accurate and comprehensive answer in no time at all.
 
-AskYourDocumentWithStreamlitChat is also incredibly versatile, able to handle a wide range of document types and formats, including PDFs, Word documents, and more. This means that no matter what type of document you need to extract information from, our application has got you covered.
+AskYourDocumentWithStreamlitChat is also incredibly versatile, able to handle a wide range of document types and formats. This means that no matter what type of document you need to extract information from, our application has got you covered.
 
 But that's not all - our application also comes with a range of powerful features and capabilities designed to make your life easier. From advanced search functions that allow you to search for specific keywords and phrases, to customizable settings that let you tailor the application to your specific needs, AskYourDocumentWithStreamlitChat offers an unparalleled level of functionality and convenience.
 
 So why wait? Try AskYourDocumentWithStreamlitChat today and experience the power of AI-driven document analysis for yourself! With its intuitive interface, advanced features, and lightning-fast performance, it's the ultimate tool for anyone who needs to extract information from their documents quickly and easily.
+
+Readme generated using ChatGPT.
 
