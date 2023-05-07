@@ -52,6 +52,5 @@ def main():
         with st.expander('Title History'):
             st.info(docs[0])
     
-
 if __name__ == '__main__':
     main()

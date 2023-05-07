@@ -73,7 +73,7 @@ def main():
       
       # show user input
         user_question = st.text_input("Ask a question about your PDF:")
-        # resbox = st.empty()
+        resbox = st.empty()
 
         if user_question:          
           llm = ChatOpenAI(streaming=True, callbacks=[StreamingStdOutCallbackHandler()],model_name="gpt-3.5-turbo", temperature=0.1)
@@ -83,7 +83,7 @@ def main():
             response = qa({"question": user_question, "chat_history": chat_history})
             chat_history.append((user_question, response['answer']))
             print(cb)
-            st.success(response["answer"]) 
+            resbox.markdown(f'*{response["answer"]}*') 
           
           st.session_state.history.append({"message": user_question, "is_user": True})
           st.session_state.history.append({"message": response['answer'], "is_user": False})
