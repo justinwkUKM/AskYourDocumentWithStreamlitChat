@@ -37,7 +37,7 @@ def main():
       st.session_state.history = []
 
     # upload file
-    pdf = st.file_uploader("Upload your PDF", type="pdf")
+    pdf = st.file_uploader("Upload your PDF 📄", type="pdf")
     
     # extract the text
     if pdf is not None:
