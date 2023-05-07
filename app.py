@@ -18,7 +18,7 @@ def main():
     st.set_page_config(layout="centered",  # Can be "centered" or "wide". In the future also "dashboard", etc.
 	                      initial_sidebar_state="auto",  # Can be "auto", "expanded", "collapsed",
                         page_title="Ask your Document 💬", 
-                        page_icon="💬")
+                        page_icon="🤖")
     st.header("Ask your Document 💬")
     hide_menu = """
     <style>footer {visibility: hidden;}
