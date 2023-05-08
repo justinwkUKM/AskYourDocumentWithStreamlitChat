@@ -12,6 +12,9 @@ from streamlit_chat import message as st_message
 
 
 def main():
+    user_question = None
+    text = ""
+
     load_dotenv()
     
     st.set_page_config(layout="centered",  # Can be "centered" or "wide". In the future also "dashboard", etc.
@@ -32,47 +35,46 @@ def main():
     """
     st.markdown(hide_menu, unsafe_allow_html=True) 
 
-
     if "history" not in st.session_state:
       st.session_state.history = []
 
     # upload file
-    pdf = st.file_uploader("Upload your PDF 📄", type="pdf")
+    pdfs = st.file_uploader("Upload your PDF 📄", type="pdf", accept_multiple_files=True)
+    for pdf in pdfs:
     
-    # extract the text
-    if pdf is not None:
-      print(pdf.name)
-      print(pdf)
+      # extract the text
+      if pdf is not None:
+        print(pdf.name)
+        try:
+          pdf_reader = PdfReader(pdf)
+          for page in pdf_reader.pages:
+            text += page.extract_text()
+          print("text", text[0:100])
+        except:
+          print('An exception occurred')
+        # split into chunks
+        text_splitter = CharacterTextSplitter(
+          separator="\n",
+          chunk_size=2000,
+          chunk_overlap=500,
+          length_function=len
+        )
 
-      text = ""
-      chat_history = []
+        if text:
+          chunks = text_splitter.split_text(text)
+          # create embeddings
+          embeddings = OpenAIEmbeddings()
+          knowledge_base = FAISS.from_texts(chunks, embeddings)
+      else:
+        st.error(f"Sorry the file {pdf.name} cannot be processed. Try another document.")
 
-      try:
-        pdf_reader = PdfReader(pdf)
-        for page in pdf_reader.pages:
-          text += page.extract_text()
-        print("text", text[0:10])
-
-      except:
-        print('An exception occurred')
-        
-      # split into chunks
-      text_splitter = CharacterTextSplitter(
-        separator="\n",
-        chunk_size=2000,
-        chunk_overlap=500,
-        length_function=len
-      )
-
-      if text:
-        chunks = text_splitter.split_text(text)
-        # create embeddings
-        embeddings = OpenAIEmbeddings()
-        knowledge_base = FAISS.from_texts(chunks, embeddings)
-      
+    if pdfs and knowledge_base is not None:
       # show user input
+      if user_question is None:
+        chat_history = []
+
         user_question = st.text_input("Ask a question about your PDF:")
-        # resbox = st.empty()
+      # resbox = st.empty()
 
         if user_question:          
           llm = ChatOpenAI(streaming=True, callbacks=[StreamingStdOutCallbackHandler()],model_name="gpt-3.5-turbo", temperature=0.1)
@@ -83,15 +85,12 @@ def main():
             chat_history.append((user_question, response['answer']))
             print(cb)
             st.success(response["answer"]) 
-          
+        
           st.session_state.history.append({"message": user_question, "is_user": True})
           st.session_state.history.append({"message": response['answer'], "is_user": False})
-          
-
+            
           for i, chat in enumerate(st.session_state.history):
             st_message(**chat, key=str(i))
-      else:
-        st.error(f"Sorry the file {pdf.name} cannot be processed. Try another document.")
 
 if __name__ == '__main__':
     main()
