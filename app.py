@@ -39,7 +39,7 @@ def main():
       st.session_state.history = []
 
     # upload file
-    pdfs = st.file_uploader("Upload your PDF 📄", type="pdf", accept_multiple_files=True)
+    pdfs = st.file_uploader("Upload upto 4 PDF's 📄📄📄", type="pdf", accept_multiple_files=True)
     for pdf in pdfs:
     
       # extract the text
@@ -55,8 +55,8 @@ def main():
         # split into chunks
         text_splitter = CharacterTextSplitter(
           separator="\n",
-          chunk_size=2000,
-          chunk_overlap=500,
+          chunk_size=1000,
+          chunk_overlap=250,
           length_function=len
         )
 
@@ -73,7 +73,7 @@ def main():
       if user_question is None:
         chat_history = []
 
-        user_question = st.text_input("Ask a question about your PDF:")
+        user_question = st.text_input("Ask a question in any language about your Document:")
       # resbox = st.empty()
 
         if user_question:          
@@ -88,9 +88,9 @@ def main():
         
           st.session_state.history.append({"message": user_question, "is_user": True})
           st.session_state.history.append({"message": response['answer'], "is_user": False})
-            
-          for i, chat in enumerate(st.session_state.history):
-            st_message(**chat, key=str(i))
+          with st.expander("Chat History"):  
+            for i, chat in enumerate(st.session_state.history):
+              st_message(**chat, key=str(i))
 
 if __name__ == '__main__':
     main()
