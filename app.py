@@ -14,6 +14,8 @@ from streamlit_chat import message as st_message
 def main():
     user_question = None
     text = ""
+    chat_history = []
+
 
     load_dotenv()
     
@@ -71,7 +73,6 @@ def main():
     if pdfs and knowledge_base is not None:
       # show user input
       if user_question is None:
-        chat_history = []
 
         user_question = st.text_input("Ask a question in any language about your Document:")
       # resbox = st.empty()
