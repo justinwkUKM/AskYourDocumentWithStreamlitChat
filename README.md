@@ -9,6 +9,7 @@ To run the project, follow the steps below:
 - Install the Streamlit package by running the following command: pip install streamlit
 - Install the Streamlit-Chat package by running the following command: pip install streamlit-chat
 - Install OpenAI package by running the following command: pip install openai
+- Install other packages from requirements.txt file: pip install -r requirements.txt
 - Add your OpenAI API key to the .env file.
 - Run the Streamlit app with the following command: streamlit run app.py
 
